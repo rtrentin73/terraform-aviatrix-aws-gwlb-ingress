@@ -1,0 +1,11 @@
+module "app_spoke_instance" {
+  source    = "./modules/aws-linux-vm-public"
+  count     = length(module.app_spoke.vpc.public_subnets)
+  vm_name   = "app-spoke-instance-${count.index+1}"
+  vpc_id    = module.app_spoke.vpc.vpc_id
+  subnet_id = module.app_spoke.vpc.public_subnets[count.index].subnet_id
+  key_name  = var.key_pair_name
+  depends_on = [
+    module.app_spoke
+  ]
+}
